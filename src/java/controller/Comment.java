@@ -44,7 +44,7 @@ public class Comment {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("comments");
 		
-		Map<String, Object> c = new HashMap<>();
+		Map<String, Object> c = new HashMap<String, Object>();
 		c.put("post_id", post_id);
 		c.put("name", name);
 		c.put("email", email);
@@ -66,7 +66,7 @@ public class Comment {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("comments");
 
-		List<CommentModel> comments = new ArrayList<>();
+		List<CommentModel> comments = new ArrayList<CommentModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		

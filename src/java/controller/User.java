@@ -43,7 +43,7 @@ public class User {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users");
 		
-		Map<String, Object> user = new HashMap<>();
+		Map<String, Object> user = new HashMap<String,Object>();
 		user.put("email", email);
 		user.put("username", username);
 		user.put("password", password);
@@ -72,14 +72,12 @@ public class User {
 		JSONObject obj = new JSONObject(json);
 
 		UserModel u = new UserModel();
-		if (obj.getString("deleted_at").equals("")) {
-			u.setId(id);
-			u.setEmail((String) obj.getString("email"));
-			u.setUsername((String) obj.getString("username"));
-			u.setPassword((String) obj.getString("password"));
-			u.setRole((String) obj.getString("role"));
-		}
-
+		//u.setId(id);
+		u.setEmail((String) obj.getString("email"));
+		u.setUsername((String) obj.getString("username"));
+		u.setPassword((String) obj.getString("password"));
+		u.setRole((String) obj.getString("role"));
+		
 		return u;
 	}
 
@@ -92,20 +90,21 @@ public class User {
 	 * @param role
 	 */
 	@WebMethod(operationName = "updateUser")
-	public void updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
+	public boolean updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
 
 		long updated_at = System.currentTimeMillis() % 1000;
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users/" + id);
 		
-		Map<String, Object> user = new HashMap<>();
+		Map<String, Object> user = new HashMap<String, Object>();
 		user.put("email", email);
 		user.put("username", username);
 		user.put("password", password);
 		user.put("role", role);
 		user.put("updated_at", updated_at);
 		postRef.updateChildren(user);
+		return true;
 	}
 
 	/**
@@ -113,10 +112,11 @@ public class User {
 	 * @param id
 	 */
 	@WebMethod(operationName = "deleteUser")
-	public void deleteUser(@WebParam(name = "id") String id) {
+	public boolean deleteUser(@WebParam(name = "id") String id) {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users/" + id);		
 		postRef.removeValue();
+		return true;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class User {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users");
 
-		List<UserModel> users = new ArrayList<>();
+		List<UserModel> users = new ArrayList<UserModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
@@ -137,7 +137,7 @@ public class User {
 			UserModel u = new UserModel();
 			u.setId(ids.next());
 			JSONObject o = obj.getJSONObject(u.getId());
-			u.setId(o.getString("id"));
+			//u.setId(o.getString("id"));
 			u.setEmail(o.getString("email"));
 			u.setUsername(o.getString("username"));
 			u.setPassword(o.getString("password"));

@@ -42,7 +42,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 		
-		Map<String, Object> post = new HashMap<>();
+		Map<String, Object> post = new HashMap<String, Object>();
 		post.put("title", title);
 		post.put("date", date);
 		post.put("content", content);
@@ -67,7 +67,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 
-		List<PostModel> posts = new ArrayList<>();
+		List<PostModel> posts = new ArrayList<PostModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
@@ -82,7 +82,6 @@ public class Post {
 			p.setStatus(o.getBoolean("status"));
 			posts.add(p);
 		}
-
 		return posts;
 	}
 
@@ -102,7 +101,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
 		
-		Map<String, Object> post = new HashMap<>();
+		Map<String, Object> post = new HashMap<String, Object>();
 		post.put("title", title);
 		post.put("date", date);
 		post.put("content", content);
@@ -125,7 +124,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
 		
-		Map<String, Object> post = new HashMap<>();
+		Map<String, Object> post = new HashMap<String, Object>();
 		post.put("deleted_at", deleted_at);
 		postRef.updateChildren(post);
 		return true;
@@ -143,7 +142,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
 		
-		Map<String, Object> post = new HashMap<>();
+		Map<String, Object> post = new HashMap<String, Object>();
 		post.put("deleted_at", -1);
 		post.put("updated_at", updated_at);
 		postRef.updateChildren(post);
@@ -186,7 +185,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 
-		List<PostModel> posts = new ArrayList<>();
+		List<PostModel> posts = new ArrayList<PostModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
@@ -217,7 +216,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 
-		List<PostModel> posts = new ArrayList<>();
+		List<PostModel> posts = new ArrayList<PostModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
@@ -242,18 +241,19 @@ public class Post {
 	 * @param id
 	 */
 	@WebMethod(operationName = "publishPost")
-	public void publishPost(@WebParam(name = "id") String id) {
+	public boolean publishPost(@WebParam(name = "id") String id) {
 		
 		long updated_at = System.currentTimeMillis() % 1000;
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
 		
-		Map<String, Object> post = new HashMap<>();
+		Map<String, Object> post = new HashMap<String, Object>();
 		System.out.println(id);
 		post.put("status", true);
 		post.put("updated_at", updated_at);
 		postRef.updateChildren(post);
+		return true;
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class Post {
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 
-		List<PostModel> posts = new ArrayList<>();
+		List<PostModel> posts = new ArrayList<PostModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
