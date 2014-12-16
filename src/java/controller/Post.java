@@ -88,99 +88,6 @@ public class Post {
 
 	/**
 	 * Web service operation
-	 * @param id
-	 * @param title
-	 * @param status
-	 * @param date
-	 * @param content
-	 * @return 
-	 */
-	@WebMethod(operationName = "updatePost")
-	public boolean updatePost(@WebParam(name = "id") String id, @WebParam(name = "title") String title, @WebParam(name = "date") long date, @WebParam(name = "content") String content, @WebParam(name = "status") boolean status) {
-
-		long updated_at = System.currentTimeMillis() % 1000;
-
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("posts/" + id);
-		
-		Map<String, Object> post = new HashMap<String, Object>();
-		post.put("title", title);
-		post.put("date", date);
-		post.put("content", content);
-		post.put("status", status);
-		post.put("updated_at", updated_at);
-		postRef.updateChildren(post);
-		
-		return true;
-	}
-
-	/**
-	 * Web service operation
-	 * @param id
-	 * @return 
-	 */
-	@WebMethod(operationName = "deletePost")
-	public boolean deletePost(@WebParam(name = "id") String id) {
-		
-		long deleted_at = System.currentTimeMillis() % 1000;
-		
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("posts/" + id);
-		
-		Map<String, Object> post = new HashMap<String, Object>();
-		post.put("deleted_at", deleted_at);
-		postRef.updateChildren(post);
-		
-		return true;
-	}
-
-	/**
-	 * Web service operation
-	 * @param id
-	 * @return 
-	 */
-	@WebMethod(operationName = "restorePost")
-	public boolean restorePost(@WebParam(name = "id") String id) {
-		
-		long updated_at = System.currentTimeMillis() % 1000;
-
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("posts/" + id);
-		
-		Map<String, Object> post = new HashMap<String, Object>();
-		post.put("deleted_at", -1);
-		post.put("updated_at", updated_at);
-		postRef.updateChildren(post);
-		
-		return true;
-	}
-
-	/**
-	 * Web service operation
-	 * @param id
-	 * @return 
-	 */
-	@WebMethod(operationName = "getPost")
-	public PostModel getPost(@WebParam(name = "id") String id) {
-		
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("posts/" + id);
-
-		String json = Database.readURL(postRef.toString() + ".json");
-		JSONObject obj = new JSONObject(json);
-
-		PostModel p = new PostModel();
-		p.setId(id);
-		p.setTitle(obj.getString("title"));
-		p.setDate(obj.getLong("date"));
-		p.setContent(obj.getString("content"));
-		p.setStatus(obj.getBoolean("status"));
-		
-		return p;
-	}
-
-	/**
-	 * Web service operation
 	 * @return 
 	 */
 	@WebMethod(operationName = "getAllPublishedPosts")
@@ -249,27 +156,6 @@ public class Post {
 
 	/**
 	 * Web service operation
-	 * @param id
-	 * @return 
-	 */
-	@WebMethod(operationName = "publishPost")
-	public boolean publishPost(@WebParam(name = "id") String id) {
-		
-		long updated_at = System.currentTimeMillis() % 1000;
-
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("posts/" + id);
-		
-		Map<String, Object> post = new HashMap<String, Object>();
-		post.put("status", true);
-		post.put("updated_at", updated_at);
-		postRef.updateChildren(post);
-		
-		return true;
-	}
-
-	/**
-	 * Web service operation
 	 * @return 
 	 */
 	@WebMethod(operationName = "getAllDeletedPosts")
@@ -300,15 +186,133 @@ public class Post {
 		return posts;
 	}
 
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "getPost")
+	public PostModel getPost(@WebParam(name = "id") String id) {
+		
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("posts/" + id);
+
+		String json = Database.readURL(postRef.toString() + ".json");
+		JSONObject obj = new JSONObject(json);
+
+		PostModel p = new PostModel();
+		p.setId(id);
+		p.setTitle(obj.getString("title"));
+		p.setDate(obj.getLong("date"));
+		p.setContent(obj.getString("content"));
+		p.setStatus(obj.getBoolean("status"));
+		
+		return p;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @param title
+	 * @param status
+	 * @param date
+	 * @param content
+	 * @return 
+	 */
+	@WebMethod(operationName = "updatePost")
+	public boolean updatePost(@WebParam(name = "id") String id, @WebParam(name = "title") String title, @WebParam(name = "date") long date, @WebParam(name = "content") String content, @WebParam(name = "status") boolean status) {
+
+		long updated_at = System.currentTimeMillis() % 1000;
+
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("posts/" + id);
+		
+		Map<String, Object> post = new HashMap<String, Object>();
+		post.put("title", title);
+		post.put("date", date);
+		post.put("content", content);
+		post.put("status", status);
+		post.put("updated_at", updated_at);
+		postRef.updateChildren(post);
+		
+		return true;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "publishPost")
+	public boolean publishPost(@WebParam(name = "id") String id) {
+		
+		long updated_at = System.currentTimeMillis() % 1000;
+
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("posts/" + id);
+		
+		Map<String, Object> post = new HashMap<String, Object>();
+		post.put("status", true);
+		post.put("updated_at", updated_at);
+		postRef.updateChildren(post);
+		
+		return true;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "deletePost")
+	public boolean deletePost(@WebParam(name = "id") String id) {
+		
+		long deleted_at = System.currentTimeMillis() % 1000;
+		
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("posts/" + id);
+		
+		Map<String, Object> post = new HashMap<String, Object>();
+		post.put("deleted_at", deleted_at);
+		postRef.updateChildren(post);
+		
+		return true;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "restorePost")
+	public boolean restorePost(@WebParam(name = "id") String id) {
+		
+		long updated_at = System.currentTimeMillis() % 1000;
+
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("posts/" + id);
+		
+		Map<String, Object> post = new HashMap<String, Object>();
+		post.put("deleted_at", -1);
+		post.put("updated_at", updated_at);
+		postRef.updateChildren(post);
+		
+		return true;
+	}
+
 	@WebMethod(operationName = "searchPost")
 	public List<PostModel> searchPost(String key) {
+		
+		List<PostModel> posts = new ArrayList<PostModel>();
+		if (key == null) {
+			return posts;
+		}
 		
 		String[] keys = key.split(" ");
 		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
 
-		List<PostModel> posts = new ArrayList<PostModel>();
 		String json = Database.readURL(postRef.toString() + ".json");
 		JSONObject obj = new JSONObject(json);
 		
@@ -325,7 +329,9 @@ public class Post {
 				
 				boolean isNotFound = false;
 				for (String k : keys) {
-					if (!(p.getTitle().contains(k) || p.getContent().contains(k))) {
+					if (p.getTitle().contains(k) || p.getContent().contains(k)) {
+						
+					} else {
 						isNotFound = true;
 						break;
 					}
