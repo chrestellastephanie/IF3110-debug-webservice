@@ -56,7 +56,37 @@ public class User {
 		
 		return user_id;
 	}
-	
+
+	/**
+	 * Web service operation
+	 * @return 
+	 */
+	@WebMethod(operationName = "getAllUsers")
+	public List<UserModel> getAllUsers() {
+		//TODO write your implementation code here:
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("users");
+
+		List<UserModel> users = new ArrayList<>();
+		String json = Database.readURL(postRef.toString() + ".json");
+		JSONObject obj = new JSONObject(json);
+		
+		Iterator<String> ids = obj.keys();
+		while(ids.hasNext()) {
+			UserModel u = new UserModel();
+			u.setId(ids.next());
+			JSONObject o = obj.getJSONObject(u.getId());
+			u.setId(o.getString("id"));
+			u.setEmail(o.getString("email"));
+			u.setUsername(o.getString("username"));
+			u.setPassword(o.getString("password"));
+			u.setRole(o.getString("role"));
+			users.add(u);
+		}
+		
+		return users;
+	}
+
 	/**
 	 * Web service operation
 	 * @param id
@@ -72,12 +102,10 @@ public class User {
 		JSONObject obj = new JSONObject(json);
 
 		UserModel u = new UserModel();
-		//u.setId(id);
 		u.setEmail((String) obj.getString("email"));
 		u.setUsername((String) obj.getString("username"));
 		u.setPassword((String) obj.getString("password"));
 		u.setRole((String) obj.getString("role"));
-		
 		return u;
 	}
 
@@ -88,6 +116,7 @@ public class User {
 	 * @param username
 	 * @param password
 	 * @param role
+	 * @return 
 	 */
 	@WebMethod(operationName = "updateUser")
 	public boolean updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
@@ -110,41 +139,13 @@ public class User {
 	/**
 	 * Web service operation
 	 * @param id
+	 * @return 
 	 */
 	@WebMethod(operationName = "deleteUser")
 	public boolean deleteUser(@WebParam(name = "id") String id) {
 		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("users/" + id);		
+		Firebase postRef = ref.child("users/" + id);
 		postRef.removeValue();
 		return true;
 	}
-
-	/**
-	 * Web service operation
-	 */
-	@WebMethod(operationName = "getAllUsers")
-	public List<UserModel> getAllUsers() {
-		//TODO write your implementation code here:
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("users");
-
-		List<UserModel> users = new ArrayList<UserModel>();
-		String json = Database.readURL(postRef.toString() + ".json");
-		JSONObject obj = new JSONObject(json);
-		
-		Iterator<String> ids = obj.keys();
-		while(ids.hasNext()) {
-			UserModel u = new UserModel();
-			u.setId(ids.next());
-			JSONObject o = obj.getJSONObject(u.getId());
-			//u.setId(o.getString("id"));
-			u.setEmail(o.getString("email"));
-			u.setUsername(o.getString("username"));
-			u.setPassword(o.getString("password"));
-			u.setRole(o.getString("role"));
-			users.add(u);
-		}
-		return users;
-	}
-
 }
