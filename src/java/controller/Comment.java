@@ -15,8 +15,6 @@ import java.util.Map;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import javax.xml.ws.RequestWrapper;
-import javax.xml.ws.ResponseWrapper;
 import model.CommentModel;
 import model.Database;
 import org.json.JSONObject;
@@ -36,8 +34,8 @@ public class Comment {
 	 * @param comments
 	 * @return 
 	 */
-	@WebMethod(operationName = "create_comment")
-	public String create_comment(@WebParam(name = "post_id") String post_id, @WebParam(name = "name") String name, @WebParam(name = "email") String email, @WebParam(name = "comment") String comments) {
+	@WebMethod(operationName = "createComment")
+	public String createComment(@WebParam(name = "post_id") String post_id, @WebParam(name = "name") String name, @WebParam(name = "email") String email, @WebParam(name = "comment") String comments) {
 		
 		long created_at = System.currentTimeMillis() % 1000;
 		
@@ -49,7 +47,7 @@ public class Comment {
 		c.put("name", name);
 		c.put("email", email);
 		c.put("comment", comments);
-		c.put("created_at", String.valueOf(created_at));
+		c.put("created_at", created_at);
 		postRef.push().setValue(c);
 		
 		String comment_id = postRef.getKey();
@@ -59,10 +57,12 @@ public class Comment {
 
 	/**
 	 * Web service operation
+	 * @param id
+	 * @return 
 	 */
 	@WebMethod(operationName = "getAllComments")
 	public List<CommentModel> getAllComments(@WebParam(name = "id") String id) {
-		//TODO write your implementation code here:
+		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("comments");
 
@@ -76,21 +76,18 @@ public class Comment {
 			c.setId(ids.next());
 			JSONObject o = obj.getJSONObject(c.getId());
 			
-			c.setPost_id(o.getString("post_id"));
-			c.setName(o.getString("name"));
-			c.setEmail(o.getString("email"));
-			c.setComment(o.getString("comment"));
-			c.setCreated_at(o.getLong("created_at"));
-			
-			comments.add(c);
+			if (o.getString("post_id").equals(id)) {
+				c.setPost_id(o.getString("post_id"));
+				c.setName(o.getString("name"));
+				c.setEmail(o.getString("email"));
+				c.setComment(o.getString("comment"));
+				c.setCreated_at(o.getLong("created_at"));
+
+				comments.add(c);
+			}
 		}
+		
 		return comments;
 	}
-
-
-
-
-	
-	
 
 }

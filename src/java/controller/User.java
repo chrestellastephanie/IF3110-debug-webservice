@@ -56,71 +56,10 @@ public class User {
 		
 		return user_id;
 	}
-	
+
 	/**
 	 * Web service operation
-	 * @param id
 	 * @return 
-	 */
-	@WebMethod(operationName = "getUser")
-	public UserModel getUser(@WebParam(name = "id") String id) {
-		
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("users/" + id);
-
-		String json = Database.readURL(postRef.toString() + ".json");
-		JSONObject obj = new JSONObject(json);
-
-		UserModel u = new UserModel();
-		if (obj.getString("deleted_at").equals("")) {
-			u.setId(id);
-			u.setEmail((String) obj.getString("email"));
-			u.setUsername((String) obj.getString("username"));
-			u.setPassword((String) obj.getString("password"));
-			u.setRole((String) obj.getString("role"));
-		}
-
-		return u;
-	}
-
-	/**
-	 * Web service operation
-	 * @param id
-	 * @param email
-	 * @param username
-	 * @param password
-	 * @param role
-	 */
-	@WebMethod(operationName = "updateUser")
-	public void updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
-
-		long updated_at = System.currentTimeMillis() % 1000;
-
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("users/" + id);
-		
-		Map<String, Object> user = new HashMap<>();
-		user.put("email", email);
-		user.put("username", username);
-		user.put("password", password);
-		user.put("role", role);
-		user.put("updated_at", updated_at);
-		postRef.updateChildren(user);
-	}
-
-	/**
-	 * Web service operation
-	 * @param id
-	 */
-	@WebMethod(operationName = "deleteUser")
-	public void deleteUser(@WebParam(name = "id") String id) {
-		Database ref = Database.getDatabase();
-		Firebase postRef = ref.child("users/" + id);		
-		postRef.removeValue();
-	}
-
-	/**
-	 * Web service operation
 	 */
 	@WebMethod(operationName = "getAllUsers")
 	public List<UserModel> getAllUsers() {
@@ -144,7 +83,74 @@ public class User {
 			u.setRole(o.getString("role"));
 			users.add(u);
 		}
+		
 		return users;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "getUser")
+	public UserModel getUser(@WebParam(name = "id") String id) {
+		
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("users/" + id);
+
+		String json = Database.readURL(postRef.toString() + ".json");
+		JSONObject obj = new JSONObject(json);
+
+		UserModel u = new UserModel();
+		u.setId(id);
+		u.setEmail((String) obj.getString("email"));
+		u.setUsername((String) obj.getString("username"));
+		u.setPassword((String) obj.getString("password"));
+		u.setRole((String) obj.getString("role"));
+
+		return u;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @param email
+	 * @param username
+	 * @param password
+	 * @param role
+	 * @return 
+	 */
+	@WebMethod(operationName = "updateUser")
+	public boolean updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
+
+		long updated_at = System.currentTimeMillis() % 1000;
+
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("users/" + id);
+		
+		Map<String, Object> user = new HashMap<>();
+		user.put("email", email);
+		user.put("username", username);
+		user.put("password", password);
+		user.put("role", role);
+		user.put("updated_at", updated_at);
+		postRef.updateChildren(user);
+		
+		return true;
+	}
+
+	/**
+	 * Web service operation
+	 * @param id
+	 * @return 
+	 */
+	@WebMethod(operationName = "deleteUser")
+	public boolean deleteUser(@WebParam(name = "id") String id) {
+		Database ref = Database.getDatabase();
+		Firebase postRef = ref.child("users/" + id);
+		postRef.removeValue();
+		
+		return true;
 	}
 
 }
