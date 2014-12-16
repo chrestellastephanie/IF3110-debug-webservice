@@ -35,9 +35,9 @@ public class Comment {
 	 * @return 
 	 */
 	@WebMethod(operationName = "createComment")
-	public String createComment(@WebParam(name = "post_id") String post_id, @WebParam(name = "name") String name, @WebParam(name = "email") String email, @WebParam(name = "comment") String comments) {
+	public boolean createComment(@WebParam(name = "post_id") String post_id, @WebParam(name = "name") String name, @WebParam(name = "email") String email, @WebParam(name = "comment") String comments) {
 		
-		long created_at = System.currentTimeMillis() % 1000;
+		long created_at = System.currentTimeMillis();
 		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("comments");
@@ -50,9 +50,7 @@ public class Comment {
 		c.put("created_at", created_at);
 		postRef.push().setValue(c);
 		
-		String comment_id = postRef.getKey();
-		
-		return comment_id;
+		return true;
 	}
 
 	/**

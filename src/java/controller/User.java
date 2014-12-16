@@ -35,10 +35,10 @@ public class User {
 	 * @return 
 	 */
 	@WebMethod(operationName = "createUser")
-	public String createUser(@WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
+	public boolean createUser(@WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
 		
-		long created_at = System.currentTimeMillis() % 1000;
-		long updated_at = System.currentTimeMillis() % 1000;
+		long created_at = System.currentTimeMillis();
+		long updated_at = System.currentTimeMillis();
 		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users");
@@ -52,9 +52,7 @@ public class User {
 		user.put("updated_at", updated_at);
 		postRef.push().setValue(user);
 		
-		String user_id = postRef.getKey();
-		
-		return user_id;
+		return true;
 	}
 
 	/**
@@ -63,7 +61,7 @@ public class User {
 	 */
 	@WebMethod(operationName = "getAllUsers")
 	public List<UserModel> getAllUsers() {
-		//TODO write your implementation code here:
+		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users");
 
@@ -76,7 +74,6 @@ public class User {
 			UserModel u = new UserModel();
 			u.setId(ids.next());
 			JSONObject o = obj.getJSONObject(u.getId());
-			u.setId(o.getString("id"));
 			u.setEmail(o.getString("email"));
 			u.setUsername(o.getString("username"));
 			u.setPassword(o.getString("password"));
@@ -121,7 +118,7 @@ public class User {
 	@WebMethod(operationName = "updateUser")
 	public boolean updateUser(@WebParam(name = "id") String id, @WebParam(name = "email") String email, @WebParam(name = "username") String username, @WebParam(name = "password") String password, @WebParam(name = "role") String role) {
 
-		long updated_at = System.currentTimeMillis() % 1000;
+		long updated_at = System.currentTimeMillis();
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("users/" + id);

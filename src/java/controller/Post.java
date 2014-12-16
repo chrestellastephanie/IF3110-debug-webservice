@@ -34,10 +34,10 @@ public class Post {
 	 * @return 
 	 */
 	@WebMethod(operationName = "createPost")
-	public String createPost(@WebParam(name = "title") String title, @WebParam(name = "date") long date, @WebParam(name = "content") String content) {
+	public boolean createPost(@WebParam(name = "title") String title, @WebParam(name = "date") long date, @WebParam(name = "content") String content) {
 
-		long created_at = System.currentTimeMillis() % 1000;
-		long updated_at = System.currentTimeMillis() % 1000;
+		long created_at = System.currentTimeMillis();
+		long updated_at = System.currentTimeMillis();
 		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts");
@@ -52,9 +52,7 @@ public class Post {
 		post.put("updated_at", updated_at);
 		postRef.push().setValue(post);
 		
-		String post_id = postRef.getKey();
-		
-		return post_id;
+		return true;
 	}
 
 //	/**
@@ -222,7 +220,7 @@ public class Post {
 	@WebMethod(operationName = "updatePost")
 	public boolean updatePost(@WebParam(name = "id") String id, @WebParam(name = "title") String title, @WebParam(name = "date") long date, @WebParam(name = "content") String content, @WebParam(name = "status") boolean status) {
 
-		long updated_at = System.currentTimeMillis() % 1000;
+		long updated_at = System.currentTimeMillis();
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
@@ -246,7 +244,7 @@ public class Post {
 	@WebMethod(operationName = "publishPost")
 	public boolean publishPost(@WebParam(name = "id") String id) {
 		
-		long updated_at = System.currentTimeMillis() % 1000;
+		long updated_at = System.currentTimeMillis();
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
@@ -267,7 +265,7 @@ public class Post {
 	@WebMethod(operationName = "deletePost")
 	public boolean deletePost(@WebParam(name = "id") String id) {
 		
-		long deleted_at = System.currentTimeMillis() % 1000;
+		long deleted_at = System.currentTimeMillis();
 		
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
@@ -287,7 +285,7 @@ public class Post {
 	@WebMethod(operationName = "restorePost")
 	public boolean restorePost(@WebParam(name = "id") String id) {
 		
-		long updated_at = System.currentTimeMillis() % 1000;
+		long updated_at = System.currentTimeMillis();
 
 		Database ref = Database.getDatabase();
 		Firebase postRef = ref.child("posts/" + id);
